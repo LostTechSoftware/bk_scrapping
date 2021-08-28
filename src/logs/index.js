@@ -4,9 +4,9 @@ const getRequestId = require('../getRequestId')
 
 CoralogixLogger.configure(
   new LoggerConfig({
-    applicationName: 'application_name',
-    privateKey: 'private_key',
-    subsystemName: 'enviroment',
+    applicationName: 'bk-scrapping',
+    privateKey: '86807c6a-fd78-6edd-b6e3-9984194170c2',
+    subsystemName: process.env.NODE_ENV,
   })
 )
 
