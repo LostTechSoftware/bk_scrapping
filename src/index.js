@@ -9,9 +9,10 @@ const Sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
 const helmet = require('helmet')
 const requestIp = require('request-ip')
+const httpContext = require('express-http-context')
 
 const app = express()
-const infoHandler = require('./logs/infoHandler')
+const logs = require('./logs')
 
 app.use(cors())
 app.use(cookieParser())
@@ -66,13 +67,14 @@ app.use(Sentry.Handlers.errorHandler())
 
 app.use(Sentry.Handlers.tracingHandler())
 
+app.use(httpContext.middleware)
+
 app.use(requestIp.mw())
 
 require('./jobs')
-require('./logs/init')(app)
-require('./logs/initResponse')(app)
+require('./middlewares/logs')(app)
 require('./routes')(app)
 
-infoHandler(`Running in port ${process.env.PORT || 3001}`)
+logs.info(`Running in port ${process.env.PORT || 3001}`)
 
 server.listen(process.env.PORT || 3001)

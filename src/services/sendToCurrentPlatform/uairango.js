@@ -4,15 +4,15 @@ const Menu = require('../../models/menu')
 const Restaurant = require('../../models/restaurant')
 const Product = require('../../models/product')
 const Row = require('../../models/rows')
-const { infoHandler } = require('../../logs')
+const logs = require('../../logs')
 const formatTexts = require('./utils/formatTexts')
 
 const uairango = async (restaurants) => {
   for (const { _id, scrappingUrl } of restaurants) {
     const restaurant = await Restaurant.findById(_id)
-    infoHandler(`Initing scrapping with partner ${restaurant.name}, on uairango.com`)
+    logs.info(`Initing scrapping with partner ${restaurant.name}, on uairango.com`)
 
-    if (restaurant.scrapped) return infoHandler(`Partner ${restaurant.name} already scrapped`)
+    if (restaurant.scrapped) return logs.info(`Partner ${restaurant.name} already scrapped`)
 
     const response = await request(scrappingUrl)
     const $ = cheerio.load(response)
@@ -46,7 +46,7 @@ const uairango = async (restaurants) => {
         })
     })
 
-    infoHandler(`Website already scrapped`)
+    logs.info(`Website already scrapped`)
 
     let menuFinde =
       (await Menu.findOne({
@@ -62,7 +62,7 @@ const uairango = async (restaurants) => {
       await restaurant.save()
     }
 
-    infoHandler(`Menu already created, creating products`)
+    logs.info(`Menu already created, creating products`)
 
     for (const row of rows) {
       const rowAlreadyCreated = menuFinde.rows.some((rowSome) => rowSome === row._id)
@@ -95,7 +95,7 @@ const uairango = async (restaurants) => {
     restaurant.scrapped = true
     await restaurant.save()
 
-    infoHandler(`Products and rows created successfully`)
+    logs.info(`Products and rows created successfully`)
   }
 }
 

@@ -1,4 +1,4 @@
-const ErrorHandler = require('../../logs/errorHandler')
+const logs = require('../../logs')
 const Restaurant = require('../../models/restaurant')
 const { sendToCurrentPlatform } = require('../../services')
 
@@ -10,7 +10,7 @@ async function initScrapping(req, res) {
 
     return res.status(200).json()
   } catch (error) {
-    ErrorHandler(error)
+    logs.error(error)
     return res.status(400).json()
   }
 }
