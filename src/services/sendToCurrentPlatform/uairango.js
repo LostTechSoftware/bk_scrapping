@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 const request = require('request-promise')
 const cheerio = require('cheerio')
 const Menu = require('../../models/menu')
@@ -48,7 +49,7 @@ const uairango = async (restaurants) => {
 
     logs.info(`Website already scrapped`)
 
-    let menuFinde =
+    const menuFinde =
       (await Menu.findOne({
         restaurant: _id,
       })) ||
